@@ -1,41 +1,59 @@
 //This creates a basic form with input fields for description and amount, and a submit button.
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-function ExpenseForm({ onAddExpense }) {
-  
+function ExpenseForm({ onAddExpense, editingExpense, onUpdateExpense }) {
+  // State variables to hold the values of the description and amount input fields
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState('');
+
+  useEffect(() => {
+    if (editingExpense) {
+      // If an expense is being edited, set the form fields to the expense's values
+      setDescription(editingExpense.description);
+      setAmount(String(editingExpense.amount)); 
+    } else {
+      // If no expense is being edited, reset the form fields to empty
+      setDescription('');
+      setAmount('');
+    }
+    // The effect runs whenever the editingExpense prop changes
+  }, [editingExpense]);
 
   const handleDescriptionChange = (event) => {
     setDescription(event.target.value); // Update the description state with the new input value
   };
 
   const handleAmountChange = (event) => {
-    setAmount(event.target.value); // Update the amount state with the new input value
+    setAmount(event.target.value); 
   };
 
-  // Function to handle the form submission
   const handleSubmit = (event) => {
     event.preventDefault(); // Prevent the default (page reload)
     if (description && amount) {
-      // Call the onAddExpense function (passed as a prop from App) with the new expense data
-      onAddExpense({ description, amount: parseFloat(amount) });
-      // Clear the input fields after submitting
+      if (editingExpense) {
+        // If in edit mode, call onUpdateExpense with the updated data and the ID
+        onUpdateExpense({ id: editingExpense.id, description, amount: parseFloat(amount) });
+      } else {
+        // If not in edit mode, call onAddExpense for a new expense
+        onAddExpense({ description, amount: parseFloat(amount) });
+      }
+      // Clear the form after submission (either add or update)
       setDescription('');
       setAmount('');
     }
   };
+
   return (
     <div>
-      <h2>Add New Expense</h2>
+      <h2>{editingExpense ? 'Edit Expense' : 'Add New Expense'}</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="description">Description:</label>
           <input
             type="text"
             id="description"
-            value={description} // Binds the input value to the description state
-            onChange={handleDescriptionChange} 
+            value={description} // Bind the input value to the description state
+            onChange={handleDescriptionChange} // Call handleDescriptionChange on input change
           />
         </div>
         <div>
@@ -43,11 +61,12 @@ function ExpenseForm({ onAddExpense }) {
           <input
             type="number"
             id="amount"
-            value={amount} // Binds the input value to the amount state
+            value={amount} 
             onChange={handleAmountChange} 
           />
         </div>
-        <button type="submit">Add Expense</button>
+        {/* Display "Update Expense" button if editingExpense exists, otherwise "Add Expense" */}
+        <button type="submit">{editingExpense ? 'Update Expense' : 'Add Expense'}</button>
       </form>
     </div>
   );
