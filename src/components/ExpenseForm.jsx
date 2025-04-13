@@ -5,6 +5,10 @@ function ExpenseForm({ onAddExpense, editingExpense, onUpdateExpense }) {
   // State variables to hold the values of the description and amount input fields
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState('');
+  // New state for the date input
+  const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
+  // New state for the comment input
+  const [comment, setComment] = useState('');
   // State variables to hold validation error messages
   const [descriptionError, setDescriptionError] = useState('');
   const [amountError, setAmountError] = useState('');
@@ -14,12 +18,16 @@ function ExpenseForm({ onAddExpense, editingExpense, onUpdateExpense }) {
       // If an expense is being edited, set the form fields to the expense's values and clear any errors
       setDescription(editingExpense.description);
       setAmount(String(editingExpense.amount)); // Convert amount to string for input
+      setDate(editingExpense.date); // Pre-fill date for editing
+      setComment(editingExpense.comment); // Pre-fill comment for editing
       setDescriptionError('');
       setAmountError('');
     } else {
       // If no expense is being edited, reset the form fields to empty and clear any errors
       setDescription('');
       setAmount('');
+      setDate(new Date().toISOString().slice(0, 10)); // Default to current date for new expenses
+      setComment(''); // Initialize comment as empty for new expenses
       setDescriptionError('');
       setAmountError('');
     }
@@ -27,13 +35,23 @@ function ExpenseForm({ onAddExpense, editingExpense, onUpdateExpense }) {
   }, [editingExpense]);
 
   const handleDescriptionChange = (event) => {
-    setDescription(event.target.value); 
+    setDescription(event.target.value);
     setDescriptionError(''); // Clear description error on input change
   };
 
   const handleAmountChange = (event) => {
     setAmount(event.target.value); // Update the amount state with the new input value
     setAmountError(''); // Clear amount error on input change
+  };
+
+  // Function to handle changes in the date input
+  const handleDateChange = (event) => {
+    setDate(event.target.value);
+  };
+
+  // Function to handle changes in the comment input
+  const handleCommentChange = (event) => {
+    setComment(event.target.value);
   };
 
   const handleSubmit = (event) => {
@@ -59,14 +77,16 @@ function ExpenseForm({ onAddExpense, editingExpense, onUpdateExpense }) {
     // If the form is valid, proceed with adding or updating the expense
     if (isValid) {
       if (editingExpense) {
-        onUpdateExpense({ id: editingExpense.id, description, amount: parsedAmount });
+        onUpdateExpense({ id: editingExpense.id, description, amount: parsedAmount, date, comment }); // Include date and comment on update
       } else {
         // If not in edit mode, call onAddExpense for a new expense
-        onAddExpense({ description, amount: parsedAmount });
+        onAddExpense({ description, amount: parsedAmount, date, comment }); // Include date and comment on add
       }
       // Clear the form after successful submission (either add or update)
       setDescription('');
       setAmount('');
+      setDate(new Date().toISOString().slice(0, 10)); // Reset date to current for next entry
+      setComment(''); // Reset comment for next entry
     }
   };
 
@@ -92,10 +112,30 @@ function ExpenseForm({ onAddExpense, editingExpense, onUpdateExpense }) {
             type="number"
             id="amount"
             value={amount} // Binds the input value to the amount state
-            onChange={handleAmountChange} 
+            onChange={handleAmountChange}
           />
           {/* Display amount error message if it exists */}
           {amountError && <p style={{ color: 'red' }}>{amountError}</p>}
+        </div>
+        {/* New input field for date */}
+        <div>
+          <label htmlFor="date">Date:</label>
+          <input
+            type="date"
+            id="date"
+            value={date}
+            onChange={handleDateChange}
+          />
+        </div>
+        {/* New textarea for comment */}
+        <div>
+          <label htmlFor="comment">Comment:</label>
+          <textarea
+            id="comment"
+            value={comment}
+            onChange={handleCommentChange}
+            rows="3" // You can adjust the number of rows as needed
+          ></textarea>
         </div>
         {/* Display "Update Expense" button if editingExpense exists, otherwise "Add Expense" */}
         <button type="submit">{editingExpense ? 'Update Expense' : 'Add Expense'}</button>

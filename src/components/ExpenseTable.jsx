@@ -10,6 +10,8 @@ function ExpenseTable({ expenses, onDeleteExpense, onEditExpense, onSort }) {
           <tr>
             <th>Description</th>
             <th>Amount</th>
+            <th>Date</th>
+            <th>Comment</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -17,10 +19,14 @@ function ExpenseTable({ expenses, onDeleteExpense, onEditExpense, onSort }) {
           {expenses.map(expense => (
             <tr key={expense.id}>
               <td>{expense.description}</td>
-              <td>${expense.amount.toFixed(2)}</td>
+              <td>KES {expense.amount.toFixed(2)}</td> {/* Added "KES " before the amount */}
+              <td>{expense.date}</td>
+              <td>{expense.comment}</td>
               <td>
-                <button onClick={() => onEditExpense(expense.id)}>Edit</button>
-                <button onClick={() => onDeleteExpense(expense.id)}>Delete</button>
+                <div className="actions-buttons">
+                  <button onClick={() => onEditExpense(expense.id)}>Edit</button>
+                  <button onClick={() => onDeleteExpense(expense.id)}>Delete</button>
+                </div>
               </td>
             </tr>
           ))}

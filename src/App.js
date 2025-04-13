@@ -13,7 +13,7 @@ function App() {
   // State for the list of expenses, initialized from local storage or default data
   const [expenses, setExpenses] = useState(() => {
     const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
-    return stored ? JSON.parse(stored) : [{ id: 1, description: 'Grocery Shopping', amount: 50.75 }, { id: 2, description: 'Movie Ticket', amount: 12.00 }, { id: 3, description: 'Dinner', amount: 35.50 }];
+    return stored ? JSON.parse(stored) : [{ id: 1, description: 'Grocery Shopping', amount: 50.75, date: '2025-04-13', comment: '' }, { id: 2, description: 'Movie Ticket', amount: 12.00, date: '2025-04-14', comment: '' }, { id: 3, description: 'Dinner', amount: 35.50, date: '2025-04-15', comment: '' }];
   });
   // State for the search text
   const [searchText, setSearchText] = useState('');
@@ -35,14 +35,14 @@ function App() {
   }, [expenses]);
 
   const handleAddExpense = newExpense => {
-    setExpenses([...expenses, { id: Date.now(), ...newExpense }]);
+    setExpenses([...expenses, { id: Date.now(), date: new Date().toISOString().slice(0, 10), comment: '', ...newExpense }]);
     setEditingId(null); // Reset edit mode after adding
   };
 
   const handleUpdateExpense = updatedExpense => {
     const updatedList = expenses.map(exp => exp.id === updatedExpense.id ? updatedExpense : exp);
     setExpenses(updatedList);
-    setEditingId(null); 
+    setEditingId(null);
   };
 
   const handleSearch = text => setSearchText(text);
@@ -77,32 +77,35 @@ function App() {
   );
 
   return (
-    <div className="App">
-      <h1>Expense Tracker</h1>
-      <SearchBar onSearch={handleSearch} />
-      <ExpenseForm onAddExpense={handleAddExpense} editingExpense={editingExpense} onUpdateExpense={handleUpdateExpense} />
-      {/* Container for the sort button and its options */}
-      <div>
-        {/* Button to toggle the visibility of sorting options */}
-        <button onClick={toggleSortOptions}>Sort Expenses</button>
-        {/* Conditional rendering of sorting options */}
-        {isSortOptionsVisible && (
-          <div>
-            {/* Buttons to sort by description (A-Z and Z-A) */}
-            <button onClick={() => sortExpenses('description', 'asc')}>A-Z</button>
-            <button onClick={() => sortExpenses('description', 'desc')}>Z-A</button>
-            {/* Buttons to sort by amount (Low to High and High to Low) */}
-            <button onClick={() => sortExpenses('amount', 'asc')}>Low to High</button>
-            <button onClick={() => sortExpenses('amount', 'desc')}>High to Low</button>
-          </div>
-        )}
+    <div className="App-container">
+      <div className="App">
+        <h1>Expense Tracker - Track and Manage Your Finances</h1>
+        <SearchBar onSearch={handleSearch} />
+        <ExpenseForm onAddExpense={handleAddExpense} editingExpense={editingExpense} onUpdateExpense={handleUpdateExpense} />
+        {/* Container for the sort button and its options */}
+        <div className="sort-buttons">
+          {/* Button to toggle the visibility of sorting options */}
+          <button onClick={toggleSortOptions}>Sort Expenses</button>
+          {/* Conditional rendering of sorting options */}
+          {isSortOptionsVisible && (
+            <div>
+              {/* Buttons to sort by description (A-Z and Z-A) */}
+              <button onClick={() => sortExpenses('description', 'asc')}>A-Z</button>
+              <button onClick={() => sortExpenses('description', 'desc')}>Z-A</button>
+              {/* Buttons to sort by amount (Low to High and High to Low) */}
+              <button onClick={() => sortExpenses('amount', 'asc')}>Low to High</button>
+              <button onClick={() => sortExpenses('amount', 'desc')}>High to Low</button>
+            </div>
+          )}
+        </div>
+        <ExpenseTable
+          expenses={displayedExpenses}
+          onDeleteExpense={handleDeleteExpense}
+          onEditExpense={handleEditExpense}
+          onSort={() => {}} // Header click sorting is disabled with buttons
+        />
       </div>
-      <ExpenseTable
-        expenses={displayedExpenses}
-        onDeleteExpense={handleDeleteExpense}
-        onEditExpense={handleEditExpense}
-        onSort={() => {}} // Header click sorting is disabled with buttons
-      />
+      <div className="left-space"></div>
     </div>
   );
 }

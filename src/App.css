@@ -1,38 +1,196 @@
+body {
+  margin: 0;
+  background-color: #000A26; /* deep navy - Overall background */
+  display: flex;
+  flex-direction: row-reverse; /* App on the left, space on the right */
+  align-items: stretch;
+  min-height: 100vh;
+  color: #D6E6F2; /* ice blue - Default text for readability on dark backgrounds */
+}
+
+.left-space {
+  width: 85vw; /* Adjust width as needed for the right खाली space */
+  background-color: #000A26; /* deep navy */
+}
+
 .App {
+  font-family: sans-serif;
+  padding: 20px;
+  margin: 0;
+  background-color: #0F52BA; /* sapphire - Main app background */
+  border-radius: 8px 0 0 8px; /* Rounded left corners */
+  box-shadow: -4px 0 8px rgba(0, 0, 0, 0.2); /* Subtle shadow on the right */
+  flex-grow: 1; /* Allow it to take remaining space */
+  flex-basis: 90%; /* Initial preferred width of 90% - adjust as needed */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #D6E6F2; /* ice blue - Clear header text */
+}
+
+/* Form Styling */
+form {
+  background-color: #D6E6F2; /* ice blue - Light background for the form */
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column; /* Stack form elements */
+  gap: 10px;
+  color: #000A26; /* deep navy - Form text for good contrast */
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #0F52BA; /* sapphire - Highlight labels */
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #A6C6DB; /* powder blue - Soft input border */
+  border-radius: 4px;
+  box-sizing: border-box;
+  color: #000A26; /* deep navy - Input text */
+}
+
+button[type="submit"] {
+  padding: 10px 15px;
+  background-color: #A6C6DB; /* powder blue - Primary action button */
+  color: #000A26; /* deep navy - Button text */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s ease-in-out;
+}
+
+button[type="submit"]:hover {
+  background-color: #8BB7CF; /* Slightly darker powder blue on hover */
+}
+
+/* Search Bar Styling */
+.search-bar {
+  margin-bottom: 15px;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.search-bar input[type="text"] {
+  width: 80%;
+  padding: 10px;
+  border: 1px solid #A6C6DB; /* powder blue - Search input border */
+  border-radius: 4px;
+  box-sizing: border-box;
+  color: #000A26; /* deep navy - Search text */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* Sort Buttons Styling */
+.sort-buttons {
+  margin-bottom: 15px;
+  text-align: center;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+.sort-buttons button {
+  padding: 8px 12px;
+  margin: 0 5px;
+  border: 1px solid #0F52BA; /* sapphire - Sort button border */
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #D6E6F2; /* ice blue - Sort button background */
+  color: #0F52BA; /* sapphire - Sort button text */
+  transition: background-color 0.2s ease-in-out;
+}
+
+.sort-buttons button:hover {
+  background-color: #A6C6DB; /* powder blue on hover */
+  color: #000A26;
+}
+
+/* Expense Table Styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: #D6E6F2; /* ice blue - Light table background */
+  color: #000A26; /* deep navy - Table text */
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Subtle table shadow */
+}
+
+th, td {
+  border: 1px solid #A6C6DB; /* powder blue - Table cell borders */
+  padding: 10px;
+  text-align: left;
+}
+
+th {
+  background-color: #0F52BA; /* sapphire - Table header */
+  font-weight: bold;
+  color: #D6E6F2; /* ice blue - Header text */
+}
+
+tbody tr:nth-child(even) {
+  background-color: #E0F2F7; /* Light ice blue for even rows */
+}
+
+tbody tr:hover {
+  background-color: #CCECF9; /* Slightly darker ice blue on hover */
+}
+
+/* Action Buttons in Table */
+.actions-buttons button {
+  padding: 8px 12px;
+  margin-right: 5px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.actions-buttons button:first-child { /* Edit button */
+  background-color: #A6C6DB; /* powder blue */
+  color: #000A26;
+}
+
+.actions-buttons button:first-child:hover {
+  background-color: #8BB7CF;
+}
+
+.actions-buttons button:last-child { /* Delete button */
+  background-color: #DC3545; /* Red for delete */
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.actions-buttons button:last-child:hover {
+  background-color: #C82333;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Error Messages */
+.error-message {
+  color: #FF4D4D; /* Red for errors */
+  font-size: 0.9em;
+  margin-top: 5px;
+}
+
+/* Comment Textarea */
+textarea {
+  font-family: sans-serif;
+  color: #000A26;
+  border: 1px solid #A6C6DB;
+  border-radius: 4px;
+  padding: 8px;
+  box-sizing: border-box;
+  width: 100%;
 }
